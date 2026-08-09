@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Dismissal Analysis — Cric Player Insights{% endblock %}
+{% block breadcrumb %}Dismissals{% endblock %}
+{% block nav_dismissals %}active{% endblock %}
+
+{% block content %}
+<div class="search-card" style="padding-bottom:20px;">
+    <div class="search-card-title">🎳 Dismissal Analysis</div>
+    <div class="search-card-sub">Detailed breakdown of dismissal types, patterns, and leading bowlers across IPL history.</div>
+</div>
+
+<div class="section">
+    <div class="section-header"><div><p class="section-kicker">Overview</p><h2 class="section-title">Most Common Dismissal Types</h2></div></div>
+    <div class="table-responsive">
+        {% if common_dismissals is not none and not common_dismissals.empty %}
+        {{ common_dismissals.to_html(classes="table table-hover", index=False, border=0) | safe }}
+        {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="section">
+            <div class="section-header"><div><p class="section-kicker">Bowled</p><h2 class="section-title">Top Bowled Dismissals</h2></div></div>
+            <div class="table-responsive">
+                {% if bowled_bowlers is not none and not bowled_bowlers.empty %}
+                {{ bowled_bowlers.to_html(classes="table table-hover", index=False, border=0) | safe }}
+                {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="section">
+            <div class="section-header"><div><p class="section-kicker">LBW</p><h2 class="section-title">Top LBW Dismissals</h2></div></div>
+            <div class="table-responsive">
+                {% if lbw_bowlers is not none and not lbw_bowlers.empty %}
+                {{ lbw_bowlers.to_html(classes="table table-hover", index=False, border=0) | safe }}
+                {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

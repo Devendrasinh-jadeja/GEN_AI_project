@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Statistics — Cric Player Insights{% endblock %}
+{% block breadcrumb %}Statistics{% endblock %}
+{% block nav_statistics %}active{% endblock %}
+
+{% block content %}
+<div class="search-card" style="padding-bottom:20px;">
+    <div class="search-card-title">📈 Overall IPL Statistics</div>
+    <div class="search-card-sub">Comprehensive game, season, and player statistics across all IPL seasons.</div>
+</div>
+
+{% if overall_stats %}
+<div class="section">
+    <div class="section-header"><div><p class="section-kicker">Summary</p><h2 class="section-title">Dataset Overview</h2></div></div>
+    <div class="metric-grid">
+        <div class="metric-card"><p class="metric-label">Total Matches</p><div class="metric-value">{{ overall_stats.total_matches }}</div></div>
+        <div class="metric-card"><p class="metric-label">Total Players</p><div class="metric-value">{{ overall_stats.total_players }}</div></div>
+        <div class="metric-card"><p class="metric-label">Total Teams</p><div class="metric-value">{{ overall_stats.total_teams }}</div></div>
+        <div class="metric-card"><p class="metric-label">Avg Runs/Match</p><div class="metric-value">{{ overall_stats.avg_runs_per_match }}</div></div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="section">
+            <div class="section-header"><div><p class="section-kicker">Batting</p><h2 class="section-title">Highest Scoring Matches</h2></div></div>
+            <div class="table-responsive">
+                {% if highest_scoring is not none and not highest_scoring.empty %}
+                {{ highest_scoring.to_html(classes="table table-hover", index=False, border=0) | safe }}
+                {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="section">
+            <div class="section-header"><div><p class="section-kicker">Batting</p><h2 class="section-title">Lowest Scoring Matches</h2></div></div>
+            <div class="table-responsive">
+                {% if lowest_scoring is not none and not lowest_scoring.empty %}
+                {{ lowest_scoring.to_html(classes="table table-hover", index=False, border=0) | safe }}
+                {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header"><div><p class="section-kicker">Bowling</p><h2 class="section-title">Highest Wicket Matches</h2></div></div>
+    <div class="table-responsive">
+        {% if highest_wickets is not none and not highest_wickets.empty %}
+        {{ highest_wickets.to_html(classes="table table-hover", index=False, border=0) | safe }}
+        {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="section">
+            <div class="section-header"><div><p class="section-kicker">Trends</p><h2 class="section-title">Stats by Season</h2></div></div>
+            <div class="table-responsive">
+                {% if season_stats is not none and not season_stats.empty %}
+                {{ season_stats.to_html(classes="table table-hover", index=False, border=0) | safe }}
+                {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="section">
+            <div class="section-header"><div><p class="section-kicker">Venues</p><h2 class="section-title">Top Performing Venues</h2></div></div>
+            <div class="table-responsive">
+                {% if venue_stats is not none and not venue_stats.empty %}
+                {{ venue_stats.to_html(classes="table table-hover", index=False, border=0) | safe }}
+                {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

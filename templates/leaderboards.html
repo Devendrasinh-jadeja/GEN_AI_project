@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Leaderboards — Cric Player Insights{% endblock %}
+{% block breadcrumb %}Leaderboards{% endblock %}
+{% block nav_leaderboards %}active{% endblock %}
+
+{% block content %}
+<div class="search-card" style="padding-bottom:20px;">
+    <div class="search-card-title">🏆 Leaderboards</div>
+    <div class="search-card-sub">Top performers across various IPL batting and bowling metrics.</div>
+</div>
+
+<div class="section">
+    <div class="section-header"><div><p class="section-kicker">Batting</p><h2 class="section-title">Top Run Scorers</h2></div></div>
+    <div class="table-responsive">
+        {% if top_batters is not none and not top_batters.empty %}
+        {{ top_batters.to_html(classes="table table-hover", index=False, border=0) | safe }}
+        {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header"><div><p class="section-kicker">Bowling</p><h2 class="section-title">Top Wicket Takers</h2></div></div>
+    <div class="table-responsive">
+        {% if top_bowlers is not none and not top_bowlers.empty %}
+        {{ top_bowlers.to_html(classes="table table-hover", index=False, border=0) | safe }}
+        {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header"><div><p class="section-kicker">Batting</p><h2 class="section-title">Highest Strike Rates <span style="font-size:14px;font-weight:400;color:var(--muted);">(Min 100 balls)</span></h2></div></div>
+    <div class="table-responsive">
+        {% if highest_sr is not none and not highest_sr.empty %}
+        {{ highest_sr.to_html(classes="table table-hover", index=False, border=0) | safe }}
+        {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header"><div><p class="section-kicker">Bowling</p><h2 class="section-title">Best Economies <span style="font-size:14px;font-weight:400;color:var(--muted);">(Min 30 overs)</span></h2></div></div>
+    <div class="table-responsive">
+        {% if best_economy is not none and not best_economy.empty %}
+        {{ best_economy.to_html(classes="table table-hover", index=False, border=0) | safe }}
+        {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header"><div><p class="section-kicker">Fielding</p><h2 class="section-title">Most Dismissals</h2></div></div>
+    <div class="table-responsive">
+        {% if most_dismissals is not none and not most_dismissals.empty %}
+        {{ most_dismissals.to_html(classes="table table-hover", index=False, border=0) | safe }}
+        {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+    </div>
+</div>
+{% endblock %}

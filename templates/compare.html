@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}Compare Players — Cric Player Insights{% endblock %}
+{% block description %}Side-by-side IPL batting and bowling comparison for any two players.{% endblock %}
+{% block breadcrumb %}Compare Players{% endblock %}
+{% block nav_compare %}active{% endblock %}
+
+{% block content %}
+<div class="search-card">
+    <div class="search-card-title">⚖️ Player Comparison</div>
+    <div class="search-card-sub">Compare two IPL players across career batting and bowling statistics.</div>
+    <form method="POST">
+        <div class="row g-3 align-items-end">
+            <div class="col-lg-5">
+                <label class="form-label">First Player</label>
+                <input list="players-dl" name="player1" class="form-control" placeholder="e.g. Virat Kohli" value="{{ player1 or '' }}" required>
+            </div>
+            <div class="col-lg-5">
+                <label class="form-label">Second Player</label>
+                <input list="players-dl" name="player2" class="form-control" placeholder="e.g. Rohit Sharma" value="{{ player2 or '' }}" required>
+            </div>
+            <div class="col-lg-2">
+                <button class="btn btn-primary w-100" type="submit">Compare</button>
+            </div>
+        </div>
+        <datalist id="players-dl">
+            {% for p in players %}<option value="{{ p }}">{% endfor %}
+        </datalist>
+    </form>
+</div>
+
+{% if comparison %}
+<div class="row g-3 mb-4">
+    <div class="col-md-5">
+        <div class="player-card d-flex flex-column align-items-center justify-content-between">
+            <div>
+                <div class="avatar">{{ player1[0] }}</div>
+                <h3 style="font-size:18px;font-weight:700;">{{ player1 }}</h3>
+                <span class="score-badge" data-player="{{ player1 }}" style="margin-top:8px;">{{ player1 }}</span>
+            </div>
+            <a href="/download-player-csv/{{ player1 }}" class="btn btn-outline w-100 mt-3" style="font-size:12px!important;min-height:38px;">
+                📥 Download {{ player1 }} CSV
+            </a>
+        </div>
+    </div>
+    <div class="col-md-2 d-flex align-items-center justify-content-center">
+        <div class="vs">VS</div>
+    </div>
+    <div class="col-md-5">
+        <div class="player-card d-flex flex-column align-items-center justify-content-between">
+            <div>
+                <div class="avatar" style="background:linear-gradient(135deg,var(--brand-3),var(--brand-2));">{{ player2[0] }}</div>
+                <h3 style="font-size:18px;font-weight:700;">{{ player2 }}</h3>
+                <span class="score-badge" data-player="{{ player2 }}" style="margin-top:8px;">{{ player2 }}</span>
+            </div>
+            <a href="/download-player-csv/{{ player2 }}" class="btn btn-outline w-100 mt-3" style="font-size:12px!important;min-height:38px;">
+                📥 Download {{ player2 }} CSV
+            </a>
+        </div>
+    </div>
+</div>
+
+{% if comparison.overall_winner %}
+<div class="section mb-4" style="border-left: 4px solid var(--brand);">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div>
+            <span class="section-kicker">Head-to-Head Summary</span>
+            <h3 class="m-0" style="font-size: 22px; font-weight: 800; color: var(--ink);">
+                {% if comparison.overall_winner != 'Tie' %}
+                🏆 Head-to-Head Winner: <span class="badge-win ms-2" data-player="{{ comparison.overall_winner }}" style="font-size: 16px !important; padding: 6px 14px !important;">{{ comparison.overall_winner }}</span>
+                {% else %}
+                🤝 Outcome: <span class="badge-win ms-2" style="font-size: 15px !important;">Tie (Equal Metric Wins)</span>
+                {% endif %}
+            </h3>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <div style="font-size: 14px; font-weight: 600; color: var(--muted);">
+                Scoreboard: <span data-player="{{ player1 }}" class="badge-win me-1" style="font-size:12px!important;padding:3px 8px!important;">{{ player1 }}</span> {{ comparison.p1_wins }} — {{ comparison.p2_wins }} <span data-player="{{ player2 }}" class="badge-win ms-1" style="font-size:12px!important;padding:3px 8px!important;">{{ player2 }}</span>
+            </div>
+            <a href="/download-comparison-csv/{{ player1 }}/{{ player2 }}" class="btn btn-primary" style="font-size:12px!important;min-height:38px;">
+                📊 Download Comparison CSV
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if comparison.batting is not none and not comparison.batting.empty %}
+<div class="section">
+    <div class="section-header">
+        <div>
+            <p class="section-kicker">Batting</p>
+            <h2 class="section-title">Batting Head-to-Head</h2>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead><tr><th>Metric</th><th>{{ player1 }}</th><th>{{ player2 }}</th><th>Winner</th></tr></thead>
+            <tbody>
+                {% for metric, row in comparison.batting.iterrows() %}
+                {% set left = row[player1] %}{% set right = row[player2] %}
+                {% set lower_better = metric in ["Dot Ball %"] %}
+                <tr>
+                    <td class="fw-bold" style="text-align:left!important;">{{ metric }}</td>
+                    <td {% if left is number and right is number and ((not lower_better and left > right) or (lower_better and left < right)) %}style="color:var(--success);font-weight:700;"{% endif %}>{{ left }}</td>
+                    <td {% if left is number and right is number and ((not lower_better and right > left) or (lower_better and right < left)) %}style="color:var(--success);font-weight:700;"{% endif %}>{{ right }}</td>
+                    <td>
+                        {% if left is number and right is number %}
+                            {% if left == right %}<span style="color:var(--muted);font-size:12px;">Tie</span>
+                            {% elif (not lower_better and left > right) or (lower_better and left < right) %}<span class="badge-win" data-player="{{ player1 }}">{{ player1 }}</span>
+                            {% else %}<span class="badge-win" data-player="{{ player2 }}">{{ player2 }}</span>{% endif %}
+                        {% else %}—{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% if comparison.bowling is not none and not comparison.bowling.empty %}
+<div class="section">
+    <div class="section-header">
+        <div>
+            <p class="section-kicker">Bowling</p>
+            <h2 class="section-title">Bowling Head-to-Head</h2>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead><tr><th>Metric</th><th>{{ player1 }}</th><th>{{ player2 }}</th><th>Winner</th></tr></thead>
+            <tbody>
+                {% for metric, row in comparison.bowling.iterrows() %}
+                {% set left = row[player1] %}{% set right = row[player2] %}
+                {% set lower_better = metric in ["Economy", "Bowling Avg", "Bowling SR"] %}
+                <tr>
+                    <td class="fw-bold" style="text-align:left!important;">{{ metric }}</td>
+                    <td {% if left is number and right is number and ((not lower_better and left > right) or (lower_better and left < right)) %}style="color:var(--success);font-weight:700;"{% endif %}>{{ left }}</td>
+                    <td {% if left is number and right is number and ((not lower_better and right > left) or (lower_better and right < left)) %}style="color:var(--success);font-weight:700;"{% endif %}>{{ right }}</td>
+                    <td>
+                        {% if left is number and right is number %}
+                            {% if left == right %}<span style="color:var(--muted);font-size:12px;">Tie</span>
+                            {% elif (not lower_better and left > right) or (lower_better and left < right) %}<span class="badge-win" data-player="{{ player1 }}">{{ player1 }}</span>
+                            {% else %}<span class="badge-win" data-player="{{ player2 }}">{{ player2 }}</span>{% endif %}
+                        {% else %}—{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% if (comparison.batting is none or comparison.batting.empty) and (comparison.bowling is none or comparison.bowling.empty) %}
+<div class="alert alert-info">No comparative metrics available between {{ player1 }} and {{ player2 }}.</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}

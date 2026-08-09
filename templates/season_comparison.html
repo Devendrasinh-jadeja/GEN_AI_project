@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Season Comparison — Cric Player Insights{% endblock %}
+{% block breadcrumb %}Season Compare{% endblock %}
+{% block nav_season %}active{% endblock %}
+
+{% block content %}
+<div class="search-card">
+    <div class="search-card-title">📅 Season Comparison</div>
+    <div class="search-card-sub">Compare player performance metrics across different IPL seasons.</div>
+    <form method="POST">
+        <div class="row g-3 align-items-end">
+            <div class="col-lg-6">
+                <label class="form-label">Player Name</label>
+                <input list="players-dl" name="player" class="form-control" placeholder="Search player name..." value="{{ player or '' }}" required>
+                <datalist id="players-dl">{% for p in players %}<option value="{{ p }}">{% endfor %}</datalist>
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Player Type</label>
+                <select name="player_type" class="form-select">
+                    <option value="batter" {% if not is_bowler %}selected{% endif %}>Batter</option>
+                    <option value="bowler" {% if is_bowler %}selected{% endif %}>Bowler</option>
+                </select>
+            </div>
+            <div class="col-lg-2">
+                <button class="btn btn-primary w-100" type="submit">Compare</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% if player and season_stats is not none and not season_stats.empty %}
+<div class="section">
+    <div class="section-header">
+        <div>
+            <p class="section-kicker">Season Breakdown</p>
+            <h2 class="section-title">{{ player }} — Year-on-Year Performance</h2>
+        </div>
+    </div>
+    <div class="table-responsive">
+        {{ season_stats.to_html(classes="table table-hover", index=False, border=0) | safe }}
+    </div>
+</div>
+{% elif player %}
+<div class="alert alert-info">No season data found for {{ player }} as a {{ 'bowler' if is_bowler else 'batter' }}.</div>
+{% else %}
+<div class="alert alert-info">Select a player and click Compare to view season-wise statistics.</div>
+{% endif %}
+{% endblock %}

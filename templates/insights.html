@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Player Insights — Cric Player Insights{% endblock %}
+{% block breadcrumb %}Player Insights{% endblock %}
+{% block nav_insights %}active{% endblock %}
+
+{% block content %}
+<div class="search-card">
+    <div class="search-card-title">💡 Player Insights & Recent Form</div>
+    <div class="search-card-sub">View player consistency, recent form, and career milestones.</div>
+    <form method="POST">
+        <div class="row g-3 align-items-end">
+            <div class="col-lg-10">
+                <label class="form-label">Player Name</label>
+                <input list="players-dl" name="player" class="form-control" placeholder="Search player name..." value="{{ player or '' }}" required>
+                <datalist id="players-dl">{% for p in players %}<option value="{{ p }}">{% endfor %}</datalist>
+            </div>
+            <div class="col-lg-2">
+                <button class="btn btn-primary w-100" type="submit">Analyze</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% if player %}
+    {% if consistency is not none or bowler_consistency is not none %}
+    <div class="section">
+        <div class="section-header">
+            <div>
+                <p class="section-kicker">Performance Consistency</p>
+                <h2 class="section-title">{{ player }}</h2>
+            </div>
+        </div>
+        <div class="row g-3">
+            {% if consistency is not none %}
+            <div class="col-md-6">
+                <div class="metric-card" style="min-height:auto;padding:24px;">
+                    <p class="metric-label">Batting Consistency (0–100)</p>
+                    <div class="metric-value" style="color:var(--brand);">{{ consistency }}</div>
+                    <div class="consistency-bar mt-2"><div class="consistency-fill" style="width:{{ consistency }}%;"></div></div>
+                    <p class="metric-footnote mt-2">Higher = more consistent run scoring across games.</p>
+                </div>
+            </div>
+            {% endif %}
+            {% if bowler_consistency is not none %}
+            <div class="col-md-6">
+                <div class="metric-card" style="min-height:auto;padding:24px;">
+                    <p class="metric-label">Bowling Consistency (0–100)</p>
+                    <div class="metric-value" style="color:var(--brand-3);">{{ bowler_consistency }}</div>
+                    <div class="consistency-bar mt-2"><div class="consistency-fill" style="width:{{ bowler_consistency }}%;background:linear-gradient(90deg,var(--brand-3),var(--brand));"></div></div>
+                    <p class="metric-footnote mt-2">Higher = more consistent economy rate across matches.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if milestones %}
+    <div class="section">
+        <div class="section-header">
+            <div><p class="section-kicker">Batting</p><h2 class="section-title">Career Milestones</h2></div>
+        </div>
+        <div class="metric-grid">
+            <div class="metric-card"><p class="metric-label">Centuries (100+)</p><div class="metric-value">{{ milestones.centuries }}</div></div>
+            <div class="metric-card"><p class="metric-label">Fifties (50+)</p><div class="metric-value">{{ milestones.fifties }}</div></div>
+            <div class="metric-card"><p class="metric-label">30+ Scores</p><div class="metric-value">{{ milestones.high_scores }}</div></div>
+            <div class="metric-card"><p class="metric-label">Ducks (0)</p><div class="metric-value" style="color:var(--danger);">{{ milestones.ducks }}</div></div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if bowler_milestones %}
+    <div class="section">
+        <div class="section-header">
+            <div><p class="section-kicker">Bowling</p><h2 class="section-title">Career Milestones</h2></div>
+        </div>
+        <div class="metric-grid">
+            <div class="metric-card"><p class="metric-label">Total Wickets</p><div class="metric-value" style="color:var(--brand);">{{ bowler_milestones.total_wickets }}</div></div>
+            <div class="metric-card"><p class="metric-label">Best (Match)</p><div class="metric-value">{{ bowler_milestones.best_wickets_in_match }}</div></div>
+            <div class="metric-card"><p class="metric-label">5-Wicket Hauls</p><div class="metric-value">{{ bowler_milestones.five_wicket_hauls }}</div></div>
+            <div class="metric-card"><p class="metric-label">Best Economy</p><div class="metric-value">{{ bowler_milestones.best_economy }}</div></div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if form_data is not none and not form_data.empty %}
+    <div class="section">
+        <div class="section-header">
+            <div><p class="section-kicker">Batting Form</p><h2 class="section-title">Last 5 Matches</h2></div>
+        </div>
+        <div class="table-responsive">
+            {{ form_data.to_html(classes="table table-hover", index=False, border=0) | safe }}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if bowler_form is not none and not bowler_form.empty %}
+    <div class="section">
+        <div class="section-header">
+            <div><p class="section-kicker">Bowling Form</p><h2 class="section-title">Last 5 Matches</h2></div>
+        </div>
+        <div class="table-responsive">
+            {{ bowler_form.to_html(classes="table table-hover", index=False, border=0) | safe }}
+        </div>
+    </div>
+    {% endif %}
+
+{% else %}
+<div class="alert alert-info">Select a player above and click Analyze to view their insights.</div>
+{% endif %}
+{% endblock %}

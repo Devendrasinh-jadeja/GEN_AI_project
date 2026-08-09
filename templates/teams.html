@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Team Stats — Cric Player Insights{% endblock %}
+{% block breadcrumb %}Team Stats{% endblock %}
+{% block nav_teams %}active{% endblock %}
+
+{% block content %}
+<div class="search-card" style="padding-bottom:20px;">
+    <div class="search-card-title">🏟️ Team Performance</div>
+    <div class="search-card-sub">Overall team statistics and batting/bowling performance metrics across all IPL seasons.</div>
+</div>
+
+<div class="section">
+    <div class="section-header"><div><p class="section-kicker">Batting</p><h2 class="section-title">Batting Performance by Team</h2></div></div>
+    <div class="table-responsive">
+        {% if team_batting is not none and not team_batting.empty %}
+        {{ team_batting.to_html(classes="table table-hover", index=False, border=0) | safe }}
+        {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header"><div><p class="section-kicker">Bowling</p><h2 class="section-title">Bowling Performance by Team</h2></div></div>
+    <div class="table-responsive">
+        {% if team_bowling is not none and not team_bowling.empty %}
+        {{ team_bowling.to_html(classes="table table-hover", index=False, border=0) | safe }}
+        {% else %}<p class="text-muted p-3">No data available</p>{% endif %}
+    </div>
+</div>
+{% endblock %}
