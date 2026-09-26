@@ -1,58 +1,65 @@
 # GEN_AI_project
 
-A Flask-based cricket analytics and player intelligence dashboard for exploring player performance, forecasting outcomes, comparing players, and evaluating match strategies using structured cricket data.
+A full-stack cricket intelligence platform built with Flask for analyzing player performance, simulating match situations, comparing players, and exploring team statistics using structured cricket data.
 
-This project turns raw ball-by-ball cricket data into actionable insights for batters, bowlers, teams, and match scenarios. It includes a full web application with multiple analytical modules and downloadable reports.
+This project combines data analytics, predictive modeling, and AI-ready tooling to provide a rich cricket dashboard for analysts, fans, and developers. It includes a web application with multiple analysis pages and downloadable reports.
 
-## Overview
+## Project overview
 
-The application reads cricket event data from the `data/processed/ball_by_ball_clean.csv` dataset and provides:
+The application reads structured ball-by-ball cricket data from `data/processed/ball_by_ball_clean.csv` and provides:
 
-- Player-centric intelligence dashboards
-- Team and season comparisons
-- Performance prediction and match impact simulation
-- Head-to-head and opponent analysis
-- Clutch and pressure evaluation
-- Booking value and ROI insights using moneyball logic
-- Squad optimization and venue analysis
-- Leaderboards and statistical summaries
-- Exportable player and comparison reports
+- player batting and bowling intelligence
+- recent form and consistency analysis
+- season-wise comparisons
+- head-to-head and matchup analysis
+- opponent and kryptonite insights
+- pressure and clutch evaluation
+- predictive performance recommendations
+- match impact and super over simulation
+- team and venue analysis
+- squad optimization
+- leaderboard summaries and CSV report export
 
-## Features
+The project is designed to be both a practical sports analytics dashboard and a foundation for further GenAI-powered cricket insights.
 
-### Player insights
-- Individual player analysis for batting and bowling performance
+## Key features
+
+### Player analysis
+- Individual batter and bowler reports
 - Role eligibility checks for batters, bowlers, and all-rounders
-- Recent form and consistency monitoring
-- Milestone and innings-level breakdowns
-- Advanced player intelligence summaries
+- Recent form tracking and milestone monitoring
+- Consistency scoring and innings-level breakdowns
+- Advanced intelligence summaries for player performance evaluation
 
-### Comparison and matchup analysis
-- Compare two players across key metrics
-- Batter vs team and bowler vs team analysis
-- Head-to-head player matchups
-- Opponent intelligence and kryptonite analysis
+### Comparison and matchup tools
+- Compare two players side by side
+- Player vs team and bowler vs team analysis
+- Head-to-head matchup evaluation
+- Opponent intelligence and weakness analysis
 
 ### Prediction and simulation
-- Player performance prediction
-- Match impact simulator for pressure scenarios
-- Super Over showdown simulation
-- Venue-based performance insights
-- Squad optimizer for Dream XI style team building
+- Player performance prediction based on venue and opponent context
+- Match impact simulator for chase scenarios
+- Super Over simulation
+- Venue-specific insights and pitch behavior analysis
+- Squad builder for selecting optimal team combinations
 
-### Reporting and analytics
-- Leaderboards for top batters, bowlers, strike rates, and economies
-- Team stats and bowling performance summaries
-- Dismissal analysis and wicket patterns
-- Season-by-season comparison
-- Overall statistics and venue trends
-- CSV report export
+### Reporting and dashboards
+- Top batters, bowlers, strike rates, and economy leaders
+- Team analytics and season comparisons
+- Dismissal pattern analysis
+- Overall match statistics and venue statistics
+- Report generation and CSV export for selected players or comparisons
 
-## Project structure
+### AI-ready foundation
+- LangChain dependency added for future GenAI workflows
+- Suitable for integrating LLM-based analysis, storytelling, and interactive insight generation
+
+## Repository structure
 
 ```text
 GEN_AI_project/
-├── analytics/                 # Core analytical functions and scoring logic
+├── analytics/                    # Core analytics and scoring modules
 │   ├── advanced_intelligence.py
 │   ├── bowler_intelligence.py
 │   ├── charts.py
@@ -63,6 +70,7 @@ GEN_AI_project/
 │   ├── leaderboards.py
 │   ├── moneyball.py
 │   ├── opponent_intelligence.py
+│   ├── phase_analysis.py
 │   ├── player_comparison.py
 │   ├── player_form.py
 │   ├── player_report.py
@@ -75,7 +83,7 @@ GEN_AI_project/
 │   ├── super_over.py
 │   ├── team_stats.py
 │   ├── venue_lab.py
-│   └── ...
+│   └── venue_intelligence.py
 ├── data/
 │   ├── processed/
 │   └── raw_json/
@@ -87,19 +95,23 @@ GEN_AI_project/
 │   ├── index.html
 │   ├── compare.html
 │   ├── predict.html
-│   ├── simulator.html
 │   ├── matchup.html
 │   ├── leaderboards.html
-│   ├── teams.html
+│   ├���─ teams.html
 │   ├── statistics.html
+│   ├── simulator.html
+│   ├── squad_builder.html
+│   ├── venue_lab.html
 │   └── ...
-├── app.py                     # Flask application entrypoint
-├── requirements.txt
+├── app.py                       # Flask application entry point
+├── requirements.txt            # Python package dependencies
+├── README.md
 ├── test_all_features.py
 ├── test_features.py
 ├── test_leaderboards.py
-├── README.md
-└── ...
+├── ok
+├── tempCodeRunnerFile.py
+└── .vscode/
 ```
 
 ## Tech stack
@@ -111,16 +123,17 @@ GEN_AI_project/
 - Matplotlib
 - Plotly
 - scikit-learn
+- LangChain
 
-## Dataset
+## Data source
 
-The project expects a cleaned cricket event dataset at:
+The main dataset used by the application is:
 
 ```text
 data/processed/ball_by_ball_clean.csv
 ```
 
-If the dataset is missing or not generated, ensure the processed CSV is available before starting the app.
+This file contains ball-by-ball cricket event data used for scoring, filtering, comparison, and prediction logic.
 
 ## Installation
 
@@ -131,65 +144,86 @@ git clone https://github.com/Devendrasinh-jadeja/GEN_AI_project.git
 cd GEN_AI_project
 ```
 
-2. Create a virtual environment
+2. Create and activate a virtual environment
 
 ```bash
 python -m venv .venv
 ```
 
-3. Activate it
-
-- On macOS/Linux:
+On macOS/Linux:
 
 ```bash
 source .venv/bin/activate
 ```
 
-- On Windows:
+On Windows:
 
 ```bash
 .venv\Scripts\activate
 ```
 
-4. Install dependencies
+3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Running the app
+## Running the project
 
-Start the Flask application:
+Start the Flask app with:
 
 ```bash
 python app.py
 ```
 
-Then open:
+Then open the application in the browser:
 
 ```text
 http://127.0.0.1:5000/
 ```
 
+## Main application pages
+
+The dashboard provides multiple pages or sections for analysis, including:
+
+- home player dashboard
+- player comparison page
+- matchup analysis
+- player prediction
+- match simulator
+- clutch and pressure analysis
+- recent form and insights
+- leaderboards
+- team statistics
+- season comparison
+- dismissal analysis
+- statistics overview
+- super over analysis
+- moneyball ROI engine
+- opponent intelligence
+- venue lab
+- squad builder
+
 ## Example use cases
 
-- Analyze a batter's recent form and consistency
-- Compare two players across batting and bowling metrics
-- Predict a player's expected performance in a venue or scenario
-- Simulate a match pressure situation with remaining overs and target runs
-- Build a squad based on player impact and role balance
-- Explore team and season trends across cricket seasons
+- Compare a batter and bowler across multiple metrics
+- Identify recent form and consistency changes over time
+- Predict a player’s likely output in a given venue and match context
+- Simulate a chase or pressure scenario with remaining overs
+- Explore which players are strongest in clutch moments
+- Evaluate team balance and optimize a Dream XI squad
+- Generate downloadable player reports for presentations and analysis
 
 ## Notes
 
-- The app is designed as a data-driven sports intelligence dashboard and is best suited for cricket analytics exploration.
-- Several modules are built around a single processed cricket dataset, so consistent data quality is important for reliable outputs.
-- UI templates provide interactive analysis pages for the different modules in the project.
+- The application is structured around cricket analytics and data exploration workflows.
+- Several modules rely on clean, consistent input data for accurate results.
+- The project is ready for future GenAI enhancements, including natural-language summaries and AI-assisted analytical explanations.
 
 ## License
 
-This project does not currently include a license file. If you plan to distribute or reuse it publicly, consider adding an appropriate open-source license.
+This project currently does not include a license file. If you plan to share or distribute it publicly, it is recommended to add an open-source license such as MIT or Apache 2.0.
 
 ## Author
 
-Developed for cricket analytics and AI-driven sports intelligence experimentation.
+Built for cricket analytics and AI-enhanced sports intelligence experimentation.
