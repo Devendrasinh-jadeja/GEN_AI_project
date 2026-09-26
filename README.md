@@ -52,8 +52,40 @@ The project is designed to be both a practical sports analytics dashboard and a 
 - Report generation and CSV export for selected players or comparisons
 
 ### AI-ready foundation
-- LangChain dependency added for future GenAI workflows
+- LangChain / LangGraph-ready architecture for future AI workflows
 - Suitable for integrating LLM-based analysis, storytelling, and interactive insight generation
+
+## LangGraph and its use in this project
+
+LangGraph is a graph-based orchestration framework from the LangChain ecosystem used to build stateful AI workflows. Instead of a single monolithic prompt, LangGraph allows you to define a workflow as a set of connected steps or nodes, where each node can do a specific job such as:
+
+- receive a user question
+- decide which tool or dataset to use
+- run a calculation or analytics function
+- combine results from multiple modules
+- generate a final natural-language explanation
+
+In this project, LangGraph can be used to build an AI-powered cricket analyst that works like this:
+
+1. User asks: "Compare Rohit Sharma and Virat Kohli in the last 3 seasons."
+2. The LangGraph workflow identifies the required analysis path:
+   - player comparison
+   - season stats
+   - recent form
+   - head-to-head context
+3. Relevant analytics functions from the `analytics/` package are executed.
+4. Results are combined into a single structured output.
+5. A language model converts these results into a clean, human-readable insight summary.
+
+This is especially useful for projects where the system needs to combine multiple tools, reason step by step, and respond dynamically rather than using a fixed response template.
+
+For this repository, the current implementation is primarily a deterministic cricket analytics dashboard. The LangGraph concept is a future enhancement that can help transform the project into an intelligent assistant that can:
+
+- answer sports-related queries in natural language
+- decide which analytics module to call automatically
+- chain together multiple analyses in one conversation
+- generate summary narratives based on the data
+- support more conversational and agent-style cricket insights
 
 ## Repository structure
 
@@ -97,7 +129,7 @@ GEN_AI_project/
 │   ├── predict.html
 │   ├── matchup.html
 │   ├── leaderboards.html
-│   ├���─ teams.html
+│   ├── teams.html
 │   ├── statistics.html
 │   ├── simulator.html
 │   ├── squad_builder.html
@@ -123,7 +155,7 @@ GEN_AI_project/
 - Matplotlib
 - Plotly
 - scikit-learn
-- LangChain
+- LangChain / LangGraph
 
 ## Data source
 
@@ -213,12 +245,14 @@ The dashboard provides multiple pages or sections for analysis, including:
 - Explore which players are strongest in clutch moments
 - Evaluate team balance and optimize a Dream XI squad
 - Generate downloadable player reports for presentations and analysis
+- Use a LangGraph-style workflow to chain analytics tools and answer questions in natural language
 
 ## Notes
 
 - The application is structured around cricket analytics and data exploration workflows.
 - Several modules rely on clean, consistent input data for accurate results.
 - The project is ready for future GenAI enhancements, including natural-language summaries and AI-assisted analytical explanations.
+- LangGraph is presented as a future integration path that can connect analytics modules into a conversational reasoning system.
 
 ## License
 
